@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>google-gson</name>
+			<type>2</type>
+			<location>C:/Users/Limeth/Documents/GitHub/google-gson/src/main/java</location>
+		</link>
+	</linkedResources>
 </projectDescription>
