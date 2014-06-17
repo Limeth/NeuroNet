@@ -1,7 +1,7 @@
 package neuroNet.limeth.network.neurons;
 
-import neuroNet.limeth.NeuralLayer;
-import neuroNet.limeth.NeuralNetwork;
+import neuroNet.limeth.network.NeuralLayer;
+import neuroNet.limeth.network.NeuralNetwork;
 
 
 public class BiasNeuron extends Neuron
@@ -29,7 +29,7 @@ public class BiasNeuron extends Neuron
 		{
 			NeuralLayer nextLayer = layer.getNextLayer();
 			
-			for(INeuron neuron : nextLayer)
+			for(Neuron neuron : nextLayer)
 				connect(neuron);
 		}
 		
@@ -50,7 +50,7 @@ public class BiasNeuron extends Neuron
 	}
 	
 	@Override
-	public boolean canConnect(INeuron neuron)
+	public boolean canConnect(Neuron neuron)
 	{
 		NeuralNetwork network = getNetwork();
 		NeuralLayer my = getLayer();

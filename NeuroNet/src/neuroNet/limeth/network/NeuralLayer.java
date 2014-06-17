@@ -1,4 +1,4 @@
-package neuroNet.limeth;
+package neuroNet.limeth.network;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 import neuroNet.limeth.network.neurons.BiasNeuron;
 import neuroNet.limeth.network.neurons.HiddenNeuron;
-import neuroNet.limeth.network.neurons.INeuron;
+import neuroNet.limeth.network.neurons.Neuron;
 
 @SuppressWarnings("serial")
-public class NeuralLayer extends ArrayList<INeuron>
+public class NeuralLayer extends ArrayList<Neuron>
 {
 	private final NeuralNetwork network;
 	
@@ -83,13 +83,33 @@ public class NeuralLayer extends ArrayList<INeuron>
 		return network.indexOf(this) >= network.size() - 1;
 	}
 	
-	public Set<INeuron> getAll(Predicate<? super INeuron> predicate)
+	public Set<Neuron> get(Predicate<? super Neuron> predicate)
 	{
 		return stream().filter(predicate).collect(Collectors.toSet());
 	}
 	
+	public NeuralConnectionSet getConnections()
+	{
+		NeuralConnectionSet set = new NeuralConnectionSet();
+		
+		for(Neuron neuron : this)
+			set.addAll(neuron.getConnections());
+		
+		return set;
+	}
+	
+	public NeuralConnectionSet getConnections(Predicate<? super NeuralConnection> predicate)
+	{
+		NeuralConnectionSet set = new NeuralConnectionSet();
+		
+		for(Neuron neuron : this)
+			set.addAll(neuron.getConnections(predicate));
+		
+		return set;
+	}
+	
 	@Override
-	public boolean add(INeuron value)
+	public boolean add(Neuron value)
 	{
 		if(value == null)
 			return false;
@@ -98,7 +118,7 @@ public class NeuralLayer extends ArrayList<INeuron>
 	}
 	
 	@Override
-	public void add(int index, INeuron value)
+	public void add(int index, Neuron value)
 	{
 		if(value == null)
 			return;
@@ -107,7 +127,7 @@ public class NeuralLayer extends ArrayList<INeuron>
 	}
 	
 	@Override
-	public boolean addAll(Collection<? extends INeuron> coll)
+	public boolean addAll(Collection<? extends Neuron> coll)
 	{
 		coll = coll.stream().filter(value -> { return value != null; }).collect(Collectors.toList());
 		
@@ -115,7 +135,7 @@ public class NeuralLayer extends ArrayList<INeuron>
 	}
 	
 	@Override
-	public boolean addAll(int index, Collection<? extends INeuron> coll)
+	public boolean addAll(int index, Collection<? extends Neuron> coll)
 	{
 		coll = coll.stream().filter(value -> { return value != null; }).collect(Collectors.toList());
 		

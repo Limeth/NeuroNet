@@ -1,7 +1,7 @@
 package neuroNet.limeth.network.neurons;
 
-import neuroNet.limeth.NeuralLayer;
-import neuroNet.limeth.NeuralNetwork;
+import neuroNet.limeth.network.NeuralLayer;
+import neuroNet.limeth.network.NeuralNetwork;
 import neuroNet.limeth.network.functions.ActivationFunction;
 
 public abstract class InputNeuron extends Neuron
@@ -22,7 +22,7 @@ public abstract class InputNeuron extends Neuron
 		{
 			NeuralLayer nextLayer = layer.getNextLayer();
 			
-			for(INeuron neuron : nextLayer)
+			for(Neuron neuron : nextLayer)
 				if(neuron.canConnect(this))
 					connect(neuron);
 		}
@@ -43,7 +43,7 @@ public abstract class InputNeuron extends Neuron
 	}
 	
 	@Override
-	public boolean canConnect(INeuron neuron)
+	public boolean canConnect(Neuron neuron)
 	{
 		NeuralNetwork network = getNetwork();
 		NeuralLayer my = getLayer();

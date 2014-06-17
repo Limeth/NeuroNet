@@ -1,7 +1,7 @@
 package neuroNet.limeth.network.neurons;
 
-import neuroNet.limeth.NeuralLayer;
-import neuroNet.limeth.NeuralNetwork;
+import neuroNet.limeth.network.NeuralLayer;
+import neuroNet.limeth.network.NeuralNetwork;
 
 public class OutputNeuron extends Neuron
 {
@@ -19,7 +19,7 @@ public class OutputNeuron extends Neuron
 		{
 			NeuralLayer previousLayer = layer.getPreviousLayer();
 			
-			for(INeuron neuron : previousLayer)
+			for(Neuron neuron : previousLayer)
 				if(neuron.canConnect(this))
 					neuron.connect(this);
 		}
@@ -30,7 +30,7 @@ public class OutputNeuron extends Neuron
 	}
 	
 	@Override
-	public boolean canConnect(INeuron neuron)
+	public boolean canConnect(Neuron neuron)
 	{
 		NeuralNetwork network = getNetwork();
 		NeuralLayer my = getLayer();

@@ -1,4 +1,4 @@
-package neuroNet.limeth;
+package neuroNet.limeth.network;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,16 +7,15 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import neuroNet.limeth.network.functions.ActivationFunction;
-import neuroNet.limeth.network.neurons.INeuron;
+import neuroNet.limeth.network.neurons.Neuron;
 
 @SuppressWarnings("serial")
 public class NeuralNetwork extends ArrayList<NeuralLayer>
 {
 	private ActivationFunction activationFunction;
 	private double weightRange;
-	private final NeuralConnectionSet connectionSet;
 	
-	public NeuralNetwork(ActivationFunction activationFunction, double weightRange, NeuralConnectionSet connectionSet)
+	public NeuralNetwork(ActivationFunction activationFunction, double weightRange)
 	{
 		super();
 		
@@ -24,17 +23,9 @@ public class NeuralNetwork extends ArrayList<NeuralLayer>
 			throw new IllegalArgumentException("The activation function cannot be null!");
 		else if(weightRange <= 0)
 			throw new IllegalArgumentException("The weight range must be positive!");
-		else if(connectionSet == null)
-			throw new IllegalArgumentException("The connection set cannot be null!");
 		
 		this.weightRange = weightRange;
 		this.activationFunction = activationFunction;
-		this.connectionSet = connectionSet;
-	}
-	
-	public NeuralNetwork(ActivationFunction activationFunction, double weightRange)
-	{
-		this(activationFunction, weightRange, new NeuralConnectionSet());
 	}
 	
 	public Set<NeuralLayer> getLayers(Predicate<? super NeuralLayer> predicate)
@@ -42,19 +33,19 @@ public class NeuralNetwork extends ArrayList<NeuralLayer>
 		return stream().filter(predicate).collect(Collectors.toSet());
 	}
 	
-	public ArrayList<INeuron> getNeurons(Predicate<? super INeuron> predicate)
+	public ArrayList<Neuron> getNeurons(Predicate<? super Neuron> predicate)
 	{
-		ArrayList<INeuron> set = new ArrayList<INeuron>();
+		ArrayList<Neuron> set = new ArrayList<Neuron>();
 		
 		for(NeuralLayer layer : this)
-			set.addAll(layer.getAll(predicate));
+			set.addAll(layer.get(predicate));
 		
 		return set;
 	}
 	
-	public ArrayList<INeuron> getNeurons()
+	public ArrayList<Neuron> getNeurons()
 	{
-		ArrayList<INeuron> set = new ArrayList<INeuron>();
+		ArrayList<Neuron> set = new ArrayList<Neuron>();
 		
 		for(NeuralLayer layer : this)
 			set.addAll(layer);
@@ -62,9 +53,31 @@ public class NeuralNetwork extends ArrayList<NeuralLayer>
 		return set;
 	}
 	
+	public NeuralConnectionSet getConnections()
+	{
+		NeuralConnectionSet set = new NeuralConnectionSet();
+		ArrayList<Neuron> neurons = getNeurons();
+		
+		for(Neuron neuron : neurons)
+			set.addAll(neuron.getConnections());
+		
+		return set;
+	}
+	
+	public NeuralConnectionSet getConnections(Predicate<? super NeuralConnection> predicate)
+	{
+		NeuralConnectionSet set = new NeuralConnectionSet();
+		ArrayList<Neuron> neurons = getNeurons();
+		
+		for(Neuron neuron : neurons)
+			set.addAll(neuron.getConnections(predicate));
+		
+		return set;
+	}
+	
 	public void resetOutputs()
 	{
-		for(INeuron neuron : getNeurons())
+		for(Neuron neuron : getNeurons())
 		{
 			neuron.resetOutput();
 		}
@@ -129,11 +142,6 @@ public class NeuralNetwork extends ArrayList<NeuralLayer>
 			throw new IllegalArgumentException("The activation function cannot be null!");
 		
 		this.activationFunction = activationFunction;
-	}
-
-	public NeuralConnectionSet getConnectionSet()
-	{
-		return connectionSet;
 	}
 
 	public double getWeightRange()

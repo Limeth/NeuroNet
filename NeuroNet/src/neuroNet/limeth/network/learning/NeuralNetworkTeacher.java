@@ -2,7 +2,7 @@ package neuroNet.limeth.network.learning;
 
 import java.util.ArrayList;
 
-import neuroNet.limeth.NeuralNetwork;
+import neuroNet.limeth.network.NeuralNetwork;
 import neuroNet.limeth.network.functions.ErrorFunction;
 import neuroNet.limeth.network.neurons.InputNeuron;
 import neuroNet.limeth.network.neurons.OutputNeuron;

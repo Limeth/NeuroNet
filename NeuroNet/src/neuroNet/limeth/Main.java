@@ -1,5 +1,7 @@
 package neuroNet.limeth;
 
+import neuroNet.limeth.network.NeuralLayer;
+import neuroNet.limeth.network.NeuralNetwork;
 import neuroNet.limeth.network.functions.ActivationFunction;
 import neuroNet.limeth.network.neurons.BiasNeuron;
 import neuroNet.limeth.network.neurons.InputNeuron;

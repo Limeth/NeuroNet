@@ -1,7 +1,7 @@
 package neuroNet.limeth.network.neurons;
 
-import neuroNet.limeth.NeuralLayer;
-import neuroNet.limeth.NeuralNetwork;
+import neuroNet.limeth.network.NeuralLayer;
+import neuroNet.limeth.network.NeuralNetwork;
 
 public class HiddenNeuron extends Neuron
 {
@@ -19,7 +19,7 @@ public class HiddenNeuron extends Neuron
 		{
 			NeuralLayer previousLayer = layer.getPreviousLayer();
 			
-			for(INeuron neuron : previousLayer)
+			for(Neuron neuron : previousLayer)
 				if(neuron.canConnect(this))
 					neuron.connect(this);
 		}
@@ -28,7 +28,7 @@ public class HiddenNeuron extends Neuron
 		{
 			NeuralLayer nextLayer = layer.getNextLayer();
 			
-			for(INeuron neuron : nextLayer)
+			for(Neuron neuron : nextLayer)
 				if(neuron.canConnect(this))
 					connect(neuron);
 		}
@@ -39,7 +39,7 @@ public class HiddenNeuron extends Neuron
 	}
 	
 	@Override
-	public boolean canConnect(INeuron neuron)
+	public boolean canConnect(Neuron neuron)
 	{
 		NeuralNetwork network = getNetwork();
 		NeuralLayer my = getLayer();

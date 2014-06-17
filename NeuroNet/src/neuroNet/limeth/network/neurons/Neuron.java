@@ -1,26 +1,33 @@
 package neuroNet.limeth.network.neurons;
 
-import neuroNet.limeth.NeuralConnection;
-import neuroNet.limeth.NeuralConnectionSet;
-import neuroNet.limeth.NeuralLayer;
-import neuroNet.limeth.NeuralNetwork;
+import java.util.function.Predicate;
+
+import neuroNet.limeth.network.NeuralConnection;
+import neuroNet.limeth.network.NeuralConnectionSet;
+import neuroNet.limeth.network.NeuralLayer;
+import neuroNet.limeth.network.NeuralNetwork;
 import neuroNet.limeth.network.functions.ActivationFunction;
 
 
-public abstract class Neuron implements INeuron
+public abstract class Neuron
 {
 	private final NeuralLayer layer;
+	private final NeuralConnectionSet connectionSet;
 	private Double lazySum, lazyOutput;
-
+	
 	public Neuron(NeuralLayer layer)
 	{
 		if(layer == null)
 			throw new IllegalArgumentException("The layer cannot be null!");
 		
 		this.layer = layer;
+		connectionSet = new NeuralConnectionSet();
 	}
 	
-	public static boolean canConnect(INeuron first, INeuron second)
+	public abstract Neuron register();
+	public abstract boolean canConnect(Neuron second);
+	
+	public static boolean canConnect(Neuron first, Neuron second)
 	{
 		return first.canConnect(second) && second.canConnect(first);
 	}
@@ -31,13 +38,11 @@ public abstract class Neuron implements INeuron
 		lazyOutput = null;
 	}
 	
-	@Override
 	public double getSum()
 	{
 		return lazySum != null ? lazySum : calculateSum();
 	}
 	
-	@Override
 	public double getOutput()
 	{
 		return lazyOutput != null ? lazyOutput : calculateOutput();
@@ -45,16 +50,14 @@ public abstract class Neuron implements INeuron
 	
 	private double calculateSum()
 	{
-		NeuralNetwork network = getNetwork();
-		NeuralConnectionSet globalSet = network.getConnectionSet();
-		NeuralConnectionSet inputSet = globalSet.getInput(this);
+		NeuralConnectionSet inputSet = getConnections(NeuralConnectionSet.isOutput(this));
 		
 		double value = 0;
 		
 		for(NeuralConnection conn : inputSet)
 		{
 			double weight = conn.getWeight();
-			INeuron other = conn.getOther(this);
+			Neuron other = conn.getOther(this);
 			double otherValue = other.getOutput();
 			
 			value += otherValue * weight;
@@ -72,21 +75,17 @@ public abstract class Neuron implements INeuron
 		return lazyOutput = afc.getValue(sum);
 	}
 	
-	@Override
-	public boolean connect(INeuron neuron, double weight)
+	public boolean connect(Neuron neuron, double weight)
 	{
 		if(!canConnect(this, neuron))
 			throw new IllegalArgumentException("Neurons " + this + " and " + neuron + " cannot be connected!");
 		
-		NeuralNetwork network = getNetwork();
-		NeuralConnectionSet set = network.getConnectionSet();
 		NeuralConnection conn = new NeuralConnection(this, neuron, weight);
 		
-		return set.add(conn);
+		return connectionSet.add(conn) & neuron.connectionSet.add(conn);
 	}
 	
-	@Override
-	public boolean connect(INeuron neuron)
+	public boolean connect(Neuron neuron)
 	{
 		NeuralNetwork network = getNetwork();
 		double weightRange = network.getWeightRange();
@@ -113,5 +112,15 @@ public abstract class Neuron implements INeuron
 		int index = network.indexOf(layer);
 		
 		return (clazz.isAnonymousClass() ? clazz.getTypeName() : clazz.getSimpleName()) + " (layer " + index + ")";
+	}
+	
+	public NeuralConnectionSet getConnections()
+	{
+		return (NeuralConnectionSet) connectionSet.clone();
+	}
+	
+	public NeuralConnectionSet getConnections(Predicate<? super NeuralConnection> predicate)
+	{
+		return getConnections().getAll(predicate);
 	}
 }

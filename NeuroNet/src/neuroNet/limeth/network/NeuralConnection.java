@@ -1,15 +1,15 @@
-package neuroNet.limeth;
+package neuroNet.limeth.network;
 
-import neuroNet.limeth.network.neurons.INeuron;
+import neuroNet.limeth.network.neurons.Neuron;
 
 import com.sun.xml.internal.txw2.IllegalAnnotationException;
 
 public class NeuralConnection
 {
-	private final INeuron from, to;
+	private final Neuron from, to;
 	private double weight;
 	
-	public NeuralConnection(INeuron from, INeuron to, double weight)
+	public NeuralConnection(Neuron from, Neuron to, double weight)
 	{
 		if(from == null || to == null)
 			throw new IllegalArgumentException("The neurons cannot be null!");
@@ -23,7 +23,7 @@ public class NeuralConnection
 		this.weight = weight;
 	}
 	
-	public INeuron getOther(INeuron neuron)
+	public Neuron getOther(Neuron neuron)
 	{
 		if(neuron == null)
 			throw new IllegalAnnotationException("The neuron cannot be null!");
@@ -35,9 +35,9 @@ public class NeuralConnection
 			throw new IllegalArgumentException("Invalid neuron.");
 	}
 	
-	public boolean contains(INeuron... neurons)
+	public boolean contains(Neuron... neurons)
 	{
-		for(INeuron neuron : neurons)
+		for(Neuron neuron : neurons)
 			if(!from.equals(neuron) && !to.equals(neuron))
 				return false;
 		
@@ -59,12 +59,12 @@ public class NeuralConnection
 		this.weight = weight;
 	}
 
-	public INeuron getFrom()
+	public Neuron getFrom()
 	{
 		return from;
 	}
 
-	public INeuron getTo()
+	public Neuron getTo()
 	{
 		return to;
 	}
